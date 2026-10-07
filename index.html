@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIFAKE - Deepfake Image Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <section class="hero">
+            <p class="tag">AI IMAGE FORENSICS</p>
+            <h1>CIFAKE Deepfake Detector</h1>
+            <p class="subtitle">
+                Upload an image and classify it as REAL or FAKE using an EfficientNetB0 model.
+            </p>
+        </section>
+
+        <section class="card">
+            <form method="POST" enctype="multipart/form-data">
+                <label class="upload-box" for="image">
+                    <span class="upload-title">Choose an image</span>
+                    <span class="upload-help">PNG, JPG, JPEG or WEBP • Max 10 MB</span>
+                </label>
+                <input id="image" name="image" type="file" accept=".png,.jpg,.jpeg,.webp" required>
+                <button type="submit">Analyze Image</button>
+            </form>
+
+            {% if error %}
+            <div class="message error">{{ error }}</div>
+            {% endif %}
+
+            {% if image_url %}
+            <div class="preview">
+                <h2>Uploaded Image</h2>
+                <img src="{{ image_url }}" alt="Uploaded image">
+            </div>
+            {% endif %}
+
+            {% if result %}
+            <div class="result {{ result.label|lower }}">
+                <p class="result-label">Prediction</p>
+                <h2>{{ result.label }}</h2>
+                <p>Confidence: <strong>{{ result.confidence }}%</strong></p>
+            </div>
+            {% endif %}
+
+            {% if not model_exists %}
+            <div class="message warning">
+                Model is not available yet. Run
+                <code>python train_model.py</code>
+                before using the detector.
+            </div>
+            {% endif %}
+        </section>
+
+        <footer>
+            CIFAKE • EfficientNetB0 • TensorFlow
+        </footer>
+    </main>
+</body>
+</html>
